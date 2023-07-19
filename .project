@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Sistema OS Kaio</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>src/img/notebook.png</name>
+			<type>1</type>
+			<location>T:/Publica/prof.JoseAssis/TI0222/UC10/img/notebook.png</location>
+		</link>
+		<link>
+			<name>src/img/os.png</name>
+			<type>1</type>
+			<location>T:/Publica/prof.JoseAssis/TI0222/UC10/img/os.png</location>
+		</link>
+	</linkedResources>
+</projectDescription>
