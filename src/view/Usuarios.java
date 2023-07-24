@@ -33,6 +33,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
 
 public class Usuarios extends JDialog {
 
@@ -56,6 +57,7 @@ public class Usuarios extends JDialog {
 	private JList listUsuarios;
 	private JScrollPane scrollPane;
 	private JComboBox cboPerfil;
+	private JCheckBox chckSenha;
 
 	/**
 	 * Launch the application.
@@ -219,7 +221,12 @@ public class Usuarios extends JDialog {
 		btnEditar.setBackground(new Color(0, 0, 0));
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				editarUsuário();
+				//evento que vai verificar se o checkbox foi selecionado
+				if (chckSenha.isSelected()) {
+					editarUsuario();
+				} else {
+					editarUsuarioExcetoSenha();
+				}
 			}
 		});
 		btnEditar.setIcon(new ImageIcon(Usuarios.class.getResource("/img/editar.png")));
@@ -242,13 +249,33 @@ public class Usuarios extends JDialog {
 		JLabel lblNewLabel_4 = new JLabel("Perfil");
 		lblNewLabel_4.setForeground(new Color(255, 255, 255));
 		lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblNewLabel_4.setBounds(355, 162, 46, 14);
+		lblNewLabel_4.setBounds(355, 159, 46, 30);
 		getContentPane().add(lblNewLabel_4);
 		
 		cboPerfil = new JComboBox();
+		cboPerfil.setForeground(new Color(255, 255, 255));
+		cboPerfil.setBackground(new Color(0, 0, 0));
 		cboPerfil.setModel(new DefaultComboBoxModel(new String[] {"", "admin", "user"}));
-		cboPerfil.setBounds(411, 158, 80, 22);
+		cboPerfil.setBounds(405, 158, 80, 31);
 		getContentPane().add(cboPerfil);
+		
+		chckSenha = new JCheckBox("Alterar Senha");
+		chckSenha.setBackground(new Color(170, 0, 0));
+		chckSenha.setForeground(new Color(255, 255, 255));
+		chckSenha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (chckSenha.isSelected()) {
+					txtSenha.setText(null);
+					txtSenha.requestFocus();
+					txtSenha.setBackground(Color.YELLOW);
+				} else {
+					txtSenha.setBackground(Color.WHITE);
+				}				
+				
+			}
+		});
+		chckSenha.setBounds(26, 196, 125, 23);
+		getContentPane().add(chckSenha);
 
 	}// FIM DO CONSTRUTOR
 	
@@ -376,7 +403,7 @@ public class Usuarios extends JDialog {
 		}
 		}//fim do método buscar
 		
-		private void editarUsuário() {
+		private void editarUsuario() {
 			//System.out.println("Teste do botão editar");
 			if(txtNome.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Digite o nome do usuario");
@@ -398,6 +425,41 @@ public class Usuarios extends JDialog {
 					pst.setString(2, txtLogin.getText());
 					pst.setString(3, txtSenha.getText());
 					pst.setString(4, txtID.getText());
+					//executar a query
+					pst.executeUpdate();
+					//confirmar para o usuario
+					JOptionPane.showMessageDialog(null, "Dados do usúario editados com sucesso.");
+					//limpar os campos
+					 limparCampos();
+					 con.close();				 
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+			
+		}// fim do método editar
+		
+		private void editarUsuarioExcetoSenha() {
+			//System.out.println("Teste do botão editar");
+			if(txtNome.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Digite o nome do usuario");
+				txtNome.requestFocus();
+			} else if (txtLogin.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Digite o login do usuario");
+				txtLogin.requestFocus();
+			} else {
+				//lógica principal
+				//CRUD - update
+				String update = "update usuarios set nome=?,login=? where id=?";
+				//tratamento de exeções
+				try {
+					//abrir a conexão
+					con = dao.conectar();
+					//preparar a query (instrução sql)
+					pst = con.prepareStatement(update);
+					pst.setString(1, txtNome.getText());
+					pst.setString(2, txtLogin.getText());
+					pst.setString(3, txtID.getText());
 					//executar a query
 					pst.executeUpdate();
 					//confirmar para o usuario
@@ -501,6 +563,7 @@ public class Usuarios extends JDialog {
 					txtLogin.setText(rs.getString(3));
 					txtSenha.setText(rs.getString(4));
 					cboPerfil.setSelectedItem(rs.getString(5));
+					btnEditar.setEnabled(true);
 				} else {
 					JOptionPane.showMessageDialog(null, "Usuário inexistente");
 				}
