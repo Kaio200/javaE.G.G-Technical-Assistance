@@ -31,9 +31,9 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.Cursor;
 
+@SuppressWarnings("unused")
 public class Relatórios extends JDialog {
-	
-	//objetos JDBC
+
 	DAO dao = new DAO();
 	private Connection con;
 	private PreparedStatement pst;
@@ -80,7 +80,41 @@ public class Relatórios extends JDialog {
 			}
 			
 		});
-		btnClientes.setBounds(150, 95, 89, 75);
+		
+		JButton btnValidade = new JButton("");
+		btnValidade.setBackground(new Color(255, 255, 255));
+		btnValidade.setForeground(new Color(255, 255, 255));
+		btnValidade.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				relatorioValidade();
+			}
+		});
+		
+		JButton btnPatrimonio = new JButton("");
+		btnPatrimonio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					relatoriopatrimonio();
+			}
+		});
+		btnPatrimonio.setBackground(new Color(255, 255, 0));
+		btnPatrimonio.setIcon(new ImageIcon(Relatórios.class.getResource("/img/dinheiro.png")));
+		btnPatrimonio.setBounds(206, 125, 89, 79);
+		getContentPane().add(btnPatrimonio);
+		btnValidade.setIcon(new ImageIcon(Relatórios.class.getResource("/img/expirado.png")));
+		btnValidade.setBounds(290, 39, 89, 75);
+		getContentPane().add(btnValidade);
+		
+		JButton btnReposicao = new JButton("");
+		btnReposicao.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				relatorioReposicao();
+			}
+		});
+		btnReposicao.setIcon(new ImageIcon(Relatórios.class.getResource("/img/pecas-de-reposicao.png")));
+		btnReposicao.setBackground(new Color(255, 255, 255));
+		btnReposicao.setBounds(120, 215, 89, 75);
+		getContentPane().add(btnReposicao);
+		btnClientes.setBounds(120, 39, 89, 75);
 		getContentPane().add(btnClientes);
 		
 		JButton btnServicos = new JButton("");
@@ -92,7 +126,7 @@ public class Relatórios extends JDialog {
 		});
 		btnServicos.setBackground(new Color(255, 255, 0));
 		btnServicos.setIcon(new ImageIcon(Relatórios.class.getResource("/img/icons8-serviço-50.png")));
-		btnServicos.setBounds(260, 95, 89, 75);
+		btnServicos.setBounds(290, 215, 89, 75);
 		getContentPane().add(btnServicos);
 		
 		JLabel lblNewLabel = new JLabel("");
@@ -100,52 +134,33 @@ public class Relatórios extends JDialog {
 		lblNewLabel.setBounds(0, 0, 504, 361);
 		getContentPane().add(lblNewLabel);
 
-	}//fim do construtor
+	}
 	
 	private void relatorioClientes() {
-		//instanciar um objeto para construir a página pdf
 		Document document = new Document();
-		//configurar como A4 e modo paisagem
-		//document.setPageSize(PageSize.A4.rotate());
-		//gerar o documento pdf
 		try {
-			//criar um documento em branco (pdf) de nome clientes.pdf
 			PdfWriter.getInstance(document, new FileOutputStream("clientes.pdf"));
-			//abrir o documento (formatar e inserir o conteúdo)
 			document.open();
-			//adicionar a data atual
 			Date dataRelatorio = new Date();
 			DateFormat formatador = DateFormat.getDateInstance(DateFormat.FULL);
 			document.add(new Paragraph(formatador.format(dataRelatorio)));
-			//adicionar um páragrafo
 			document.add(new Paragraph("Clientes:"));
-			document.add(new Paragraph(" ")); //pular uma linha
-			//----------------------------------------------------------
-			//query (instrução sql para gerar o relatório de clientes)
+			document.add(new Paragraph(" "));
 			String readClientes = "select nome,fone from clientes order by nome";
 			try {
-				//abrir a conexão com o banco
 				con = dao.conectar();
-				//preparar a query (executar a instrução sql)
 				pst = con.prepareStatement(readClientes);
-				//obter o resultado (trazer do banco de dados)
 				rs = pst.executeQuery();
-				//atenção uso do while para trazer todos os clientes
-				// Criar uma tabela de duas colunas usando o framework(itextPDF)
-				PdfPTable tabela = new PdfPTable(2); //(2) número de colunas
-				// Criar o cabeçalho da tabela
+				PdfPTable tabela = new PdfPTable(2);
 				PdfPCell col1 = new PdfPCell(new Paragraph("Cliente"));
 				PdfPCell col2 = new PdfPCell(new Paragraph("Fone"));
 				tabela.addCell(col1);
 				tabela.addCell(col2);
 				while (rs.next()) {
-					//popular a tabela
 					tabela.addCell(rs.getString(1));
 					tabela.addCell(rs.getString(2));
-				}				
-				//adicionar a tabela ao documento pdf
+				}
 				document.add(tabela);
-				//fechar a conexão com o banco
 				con.close();
 			} catch (Exception e) {
 				System.out.println(e);
@@ -153,10 +168,7 @@ public class Relatórios extends JDialog {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		//fechar o documento (pronto para "impressão" (exibir o pdf))
 		document.close();
-		//Abrir o desktop do sistema operacional e usar o leitor padrão
-		//de pdf para exibir o documento
 		try {
 			Desktop.getDesktop().open(new File("clientes.pdf"));
 		} catch (Exception e) {
@@ -172,9 +184,7 @@ public class Relatórios extends JDialog {
 			DateFormat formatador = DateFormat.getDateInstance(DateFormat.FULL);
 			document.add(new Paragraph(formatador.format(dataRelatorio)));
 			document.add(new Paragraph("Servicos:"));
-			document.add(new Paragraph(" ")); //pular uma linha
-			//----------------------------------------------------------
-			//query (instrução sql para gerar o relatório de clientes)
+			document.add(new Paragraph(" "));
 			String readServicos = "select os,equipamento,defeito,valor from servicos order by equipamento";
 			try {
 
@@ -182,8 +192,7 @@ public class Relatórios extends JDialog {
 				pst = con.prepareStatement(readServicos);
 				rs = pst.executeQuery();
 
-				PdfPTable tabela = new PdfPTable(4); 
-				// Criar o cabeçalho da tabela
+				PdfPTable tabela = new PdfPTable(4);
 				PdfPCell col1 = new PdfPCell(new Paragraph("OS"));
 				PdfPCell col2 = new PdfPCell(new Paragraph("Equipamento"));
 				PdfPCell col3 = new PdfPCell(new Paragraph("Defeito"));
@@ -206,14 +215,129 @@ public class Relatórios extends JDialog {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		
 		document.close();
 		try {
 			Desktop.getDesktop().open(new File("servicos.pdf"));
 		} catch (Exception e) {
 			System.out.println(e);
+		  }
 			
 		}
 		
+		private void relatorioValidade() {
+			Document document = new Document();
+			try {
+				PdfWriter.getInstance(document, new FileOutputStream("Validade.pdf"));
+				document.open();
+				Date dataRelatorio = new Date();
+				DateFormat formatador = DateFormat.getDateInstance(DateFormat.FULL);
+				document.add(new Paragraph(formatador.format(dataRelatorio)));
+				document.add(new Paragraph("Validade:"));
+				document.add(new Paragraph(" "));
+				String readClientes = "select codigo,produto,date_format(dataval,'%d/%m/%y') as validade from produtos where dataval < dataent";
+				try {
+					con = dao.conectar();
+					pst = con.prepareStatement(readClientes);
+					rs = pst.executeQuery();
+					PdfPTable tabela = new PdfPTable(2);
+					PdfPCell col1 = new PdfPCell(new Paragraph("Codigo"));
+					PdfPCell col2 = new PdfPCell(new Paragraph("Validade"));
+					tabela.addCell(col1);
+					tabela.addCell(col2);
+					while (rs.next()) {
+						tabela.addCell(rs.getString(1));
+						tabela.addCell(rs.getString(2));
+					}
+					document.add(tabela);
+					con.close();
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			document.close();
+			try {
+				Desktop.getDesktop().open(new File("validade.pdf"));
+			} catch (Exception e) {
+				System.out.println(e);
+		    }
+			
+		}
+			
+			private void relatorioReposicao() {
+				Document document = new Document();
+				try {
+					PdfWriter.getInstance(document, new FileOutputStream("Reposicao.pdf"));
+					document.open();
+					Date dataRelatorio = new Date();
+					DateFormat formatador = DateFormat.getDateInstance(DateFormat.FULL);
+					document.add(new Paragraph(formatador.format(dataRelatorio)));
+					document.add(new Paragraph("Reposicao:"));
+					document.add(new Paragraph(" "));
+					String readClientes = "select codigo,produto,date_format(dataval, '%d/%m/%Y') as validade, estoque, estoquemin from produtos where estoque < estoquemin;";
+					try {
+						con = dao.conectar();
+						pst = con.prepareStatement(readClientes);
+						rs = pst.executeQuery();
+						PdfPTable tabela = new PdfPTable(2);
+						PdfPCell col1 = new PdfPCell(new Paragraph("Codigo"));
+						PdfPCell col2 = new PdfPCell(new Paragraph("Produto"));
+						tabela.addCell(col1);
+						tabela.addCell(col2);
+						while (rs.next()) {
+							tabela.addCell(rs.getString(1));
+							tabela.addCell(rs.getString(2));
+						}
+						document.add(tabela);
+						con.close();
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				document.close();
+				try {
+					Desktop.getDesktop().open(new File("reposicao.pdf"));
+				} catch (Exception e) {
+					System.out.println(e);
+			 }
+				
+		}
+			
+				private void relatoriopatrimonio() {
+					Document document = new Document();
+					try {
+						PdfWriter.getInstance(document, new FileOutputStream("Patrimonio.pdf"));
+						document.open();
+						Date dataRelatorio = new Date();
+						DateFormat formatador = DateFormat.getDateInstance(DateFormat.FULL);
+						document.add(new Paragraph(formatador.format(dataRelatorio)));
+						document.add(new Paragraph("Patrimonio:"));
+						document.add(new Paragraph(" "));
+						String readClientes = "select sum(custo * estoque) as total from produtos;";
+							con = dao.conectar();
+							pst = con.prepareStatement(readClientes);
+							rs = pst.executeQuery();
+							PdfPTable tabela = new PdfPTable(1);
+							PdfPCell col1 = new PdfPCell(new Paragraph("Patrimonio"));
+							tabela.addCell(col1);
+							while (rs.next()) {
+								tabela.addCell(rs.getString(1));
+							}
+							document.add(tabela);
+							con.close();
+						} catch (Exception e) {
+							System.out.println(e);
+					        }
+					        document.close();
+					    try {
+						Desktop.getDesktop().open(new File("patrimonio.pdf"));
+					    } catch (Exception e) {
+						    System.out.println(e);
+			 }
 	}
-	
-}//fim do código
+		
+}

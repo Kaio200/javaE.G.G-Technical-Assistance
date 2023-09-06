@@ -37,7 +37,6 @@ import javax.swing.JCheckBox;
 
 public class Usuarios extends JDialog {
 
-	//Instanciar objetos JDBC
 		DAO dao = new DAO();
 		private Connection con;
 		private PreparedStatement pst;
@@ -54,8 +53,10 @@ public class Usuarios extends JDialog {
 	private JButton btnEditar;
 	private JButton btnExcluir;
 	private JButton btnAdicionar;
+	@SuppressWarnings("rawtypes")
 	private JList listUsuarios;
 	private JScrollPane scrollPane;
+	@SuppressWarnings("rawtypes")
 	private JComboBox cboPerfil;
 	private JCheckBox chckSenha;
 
@@ -79,11 +80,11 @@ public class Usuarios extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Usuarios() {
 		getContentPane().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//clicar no painel do JDialog
 				scrollPane.setVisible(false);
 				txtNome.setText(null);
 			}
@@ -221,7 +222,6 @@ public class Usuarios extends JDialog {
 		btnEditar.setBackground(new Color(0, 0, 0));
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//evento que vai verificar se o checkbox foi selecionado
 				if (chckSenha.isSelected()) {
 					editarUsuario();
 				} else {
@@ -277,39 +277,28 @@ public class Usuarios extends JDialog {
 		chckSenha.setBounds(26, 196, 125, 23);
 		getContentPane().add(chckSenha);
 
-	}// FIM DO CONSTRUTOR
+	}
 	
 	/**
 	 * Método usado para listar o nome dos usuários na lista
 	 */
+	@SuppressWarnings("unchecked")
 	private void listarUsuarios() {
-		//System.out.println("teste");
-		//a linha abaixo cria um objeto usando como referência um vetor dinâmico, este objeto irá temporariamente armazenar os nomes
 		DefaultListModel<String> modelo = new DefaultListModel<>();
-		//setar o modelo (vetor na lista)
 		listUsuarios.setModel(modelo);
-		//Query (instrução sql)
 		String readLista = "select * from usuarios where nome like '" + txtNome.getText() + "%'" + "order by nome";
 		try {
-			//abrir a conexão
 			con = dao.conectar();
-			//preparar a query (instrução sql
 			pst = con.prepareStatement(readLista);
-			//executar a query e trazer o resultado para lista
 			rs = pst.executeQuery();
-			//uso do while para trazer os usuários enquanto existir
 			while(rs.next()) {
-				//mostrar a barra de rolagem (scrollpane)
 				scrollPane.setVisible(true);
-				//adicionar os usuarios no vetor -> lista
 				modelo.addElement(rs.getString(2));
-				//esconder o scrollpane se nenhuma letra for digitada
 				if(txtNome.getText().isEmpty()) {
 					scrollPane.setVisible(false);
 				}
 				
 			}
-			//fechar a conexão
 			con.close();
 		} catch (Exception e) {
 			System.out.println(e);
@@ -319,9 +308,8 @@ public class Usuarios extends JDialog {
 	/**
 	 * Método para Adicionar um Usuário pelo nome
 	 */
+	@SuppressWarnings("deprecation")
 	private void adicionar() {
-		//System.out.println("teste");
-		//validação de campos obrigatórios
 		if (txtNome.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "prencha o Nome do Usuário");
 			txtNome.requestFocus();
@@ -331,28 +319,18 @@ public class Usuarios extends JDialog {
 			txtLogin.requestFocus();
 		} else {
 
-			
-			//lógica principal
 			String create = "insert into usuarios(Nome,Login,Senha) values (?,?,md5(?))";
-			//tratamento de exceções
 			try {
-				//abrir a conexão
 				con = dao.conectar();
-				//preparar a execução da query(instrução sql - CRUD Create)
 				pst = con.prepareStatement(create);
 				pst.setString(1, txtID.getText());
 				pst.setString(2, txtNome.getText());
 				pst.setString(3, txtLogin.getText());
 				pst.setString(4, txtSenha.getText());
 				cboPerfil.setSelectedItem(rs.getString(5));
-				//validação (liberação dos botões alterar e excluir)
-				//executa a query(instrução sql (CRUD - Create))
 				pst.executeUpdate();
-				//confirmar
 				JOptionPane.showMessageDialog(null, "Usuário adicionado");
-				//limpar os campos
 				limparCampos();
-				//fechar a conexão
 				con.close();
 			}catch (Exception e) {
 					System.out.println(e);
@@ -368,11 +346,13 @@ public class Usuarios extends JDialog {
 		txtNome.setText(null);
 		txtLogin.setText(null);
 		txtSenha.setText(null);
-	}//fim do método limparCampos()
+	}
 	
 	/**
 	 * Método usado para buscar um Usuário no banco
 	 */
+	
+	@SuppressWarnings("unused")
 	private void Usuario() {
 		System.out.println("teste do botão buscar");
 		String read = "select * from usuarios where nome = ?";
@@ -389,9 +369,7 @@ public class Usuarios extends JDialog {
 				btnEditar.setEnabled(true);
 				btnExcluir.setEnabled(true);
 			} else {
-				//se não existir um contato no banco
 				JOptionPane.showMessageDialog(null, "Usuário inexistente");
-				//validação (liberação do Botão adicionar)
 				btnAdicionar.setEnabled(true);
 				System.out.println("Usuário inexistente");
 				
@@ -401,10 +379,10 @@ public class Usuarios extends JDialog {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		}//fim do método buscar
+		}
 		
+		@SuppressWarnings("deprecation")
 		private void editarUsuario() {
-			//System.out.println("Teste do botão editar");
 			if(txtNome.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Digite o nome do usuario");
 				txtNome.requestFocus();
@@ -412,24 +390,16 @@ public class Usuarios extends JDialog {
 				JOptionPane.showMessageDialog(null, "Digite o login do usuario");
 				txtLogin.requestFocus();
 			} else {
-				//lógica principal
-				//CRUD - update
 				String update = "update usuarios set nome=?,login=?,senha=? where id=?";
-				//tratamento de exeções
 				try {
-					//abrir a conexão
 					con = dao.conectar();
-					//preparar a query (instrução sql)
 					pst = con.prepareStatement(update);
 					pst.setString(1, txtNome.getText());
 					pst.setString(2, txtLogin.getText());
 					pst.setString(3, txtSenha.getText());
 					pst.setString(4, txtID.getText());
-					//executar a query
 					pst.executeUpdate();
-					//confirmar para o usuario
 					JOptionPane.showMessageDialog(null, "Dados do usúario editados com sucesso.");
-					//limpar os campos
 					 limparCampos();
 					 con.close();				 
 				}catch (Exception e) {
@@ -437,10 +407,9 @@ public class Usuarios extends JDialog {
 				}
 			}
 			
-		}// fim do método editar
+		}
 		
 		private void editarUsuarioExcetoSenha() {
-			//System.out.println("Teste do botão editar");
 			if(txtNome.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Digite o nome do usuario");
 				txtNome.requestFocus();
@@ -448,23 +417,15 @@ public class Usuarios extends JDialog {
 				JOptionPane.showMessageDialog(null, "Digite o login do usuario");
 				txtLogin.requestFocus();
 			} else {
-				//lógica principal
-				//CRUD - update
 				String update = "update usuarios set nome=?,login=? where id=?";
-				//tratamento de exeções
 				try {
-					//abrir a conexão
 					con = dao.conectar();
-					//preparar a query (instrução sql)
 					pst = con.prepareStatement(update);
 					pst.setString(1, txtNome.getText());
 					pst.setString(2, txtLogin.getText());
 					pst.setString(3, txtID.getText());
-					//executar a query
 					pst.executeUpdate();
-					//confirmar para o usuario
 					JOptionPane.showMessageDialog(null, "Dados do usúario editados com sucesso.");
-					//limpar os campos
 					 limparCampos();
 					 con.close();				 
 				}catch (Exception e) {
@@ -472,62 +433,43 @@ public class Usuarios extends JDialog {
 				}
 			}
 			
-		}// fim do método editar
+		}
 		
 		/**
 		 * Método usado para excluir um Usuário
 		 */
 		private void excluirUsuario() {
-			//System.out.println("teste do botão excluir");
-			//validação de exclusão - a variável confirma captura a opção escolhida
 			int confirma = JOptionPane.showConfirmDialog(null, "Confirma a exclusão deste contato?","Atenção!",JOptionPane.YES_NO_OPTION);
 			if (confirma == JOptionPane.YES_OPTION) {
-				//CRUD - Delete
 				String delete = "delete from usuarios where id=?";
-				//tratamento de exceções
 				try {
-					//abrir a conexão
 					con = dao.conectar();
-					//preparar a query (instrução sql)
 					pst = con.prepareStatement(delete);
-					//substituir a ? pelo id do usuário
 					pst.setString(1, txtID.getText());
-					//executar a query
 					pst.executeUpdate();
-					//limpar campos
 					limparCampos();
-					//exibir uma mensagem ao usuário
 					JOptionPane.showMessageDialog(null, "Usuário excluído");
-					//fechar a conexão
 					con.close();
 				} catch (Exception e) {
 					System.out.println(e);
 				}
 			}		
-		} //fim do método excluirUsuarios
+		}
 		
 		/**
 		 * Método que busca o usuário selecionado na lista
 		 */
 		private void buscarUsuarioLista() {
 		 System.out.println("teste");
-			// variável que captura o índice da linha da lista
 			int linha = listUsuarios.getSelectedIndex();
 			if (linha >= 0) {
-				// Query (instrução sql)
-				// limit (0,1) -> seleciona o índice 0 e 1 usuário da lista
 				String readListaUsuario = "select * from usuarios where nome like '" + txtNome.getText() + "%'"	+ "order by nome limit " + (linha) + " , 1";
 				try {
-					//abrir a conexão
 					con = dao.conectar();
-					//preparar a query para execução
 					pst = con.prepareStatement(readListaUsuario);
-					//executar e obter o resultado
 					rs = pst.executeQuery();
 					if (rs.next()) {
-						//esconder a lista
 						scrollPane.setVisible(false);
-						//setar os campos
 						txtID.setText(rs.getString(1));
 						txtNome.setText(rs.getString(2));
 						txtLogin.setText(rs.getString(3));
@@ -536,13 +478,11 @@ public class Usuarios extends JDialog {
 					} else {
 						JOptionPane.showMessageDialog(null, "Usuário inexistente");
 					}
-					//fechar a conexão
 					con.close();
 				} catch (Exception e) {
 					System.out.println(e);
 				}
 			} else {
-				// se não existir no banco um usuário da lista
 				scrollPane.setVisible(false);
 			}
 		}
@@ -550,7 +490,6 @@ public class Usuarios extends JDialog {
 		 * Método usado para buscar um usuário no banco pelo login
 		 */
 		private void buscarUsuario() {
-			// System.out.println("teste do botão buscar");
 			String read = "select * from usuarios where login = ?";
 			try {
 				con = dao.conectar();
@@ -576,11 +515,9 @@ public class Usuarios extends JDialog {
 		/**
 		 * Método para adicionar um novo usuário
 		 */
+		@SuppressWarnings({ "deprecation", "unused" })
 		private void adicionarUsuario() {
-			// Criar uma variável/objeto para capturar a senha
 			String capturaSenha = new String(txtSenha.getPassword());
-			// System.out.println("teste");
-			// validação de campos obrigatórios
 			if (txtNome.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Preencha o nome do usuário");
 				txtNome.requestFocus();
@@ -591,37 +528,29 @@ public class Usuarios extends JDialog {
 				JOptionPane.showMessageDialog(null, "Preencha a senha do usuário");
 				txtLogin.requestFocus();
 			} else {
-				// lógica principal
-				// CRUD Create
 				String create = "insert into usuarios(nome,login,senha) values (?,?,md5(?))";
-				// tratamento de exceções
 				try {
-					// abrir a conexão
 					con = dao.conectar();
-					// preparar a execução da query(instrução sql - CRUD Create)
 					pst = con.prepareStatement(create);
 					pst.setString(1, txtNome.getText());
 					pst.setString(2, txtLogin.getText());
 					pst.setString(3, txtSenha.getText());
 					pst.setString(4, cboPerfil.getSelectedItem().toString());
 					pst.setString(5, txtID.getText());
-					// executa a query(instrução sql (CRUD - Create))
 					pst.executeUpdate();
-					// confirmar
 					JOptionPane.showMessageDialog(null, "Usuário adicionado");
-					// limpar os campos
 					limparCampos();
-					// fechar a conexão
 					con.close();
 				} catch (Exception e) {
 					System.out.println(e);
 				}
 			}
-		}// fim do método adicionar
+		}
 
 		/**
 		 * Limpar campos
 		 */
+		@SuppressWarnings("unused")
 		private void limpar() {
 			txtID.setText(null);
 			txtNome.setText(null);

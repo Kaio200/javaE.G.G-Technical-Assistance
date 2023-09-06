@@ -5,12 +5,10 @@ import java.sql.DriverManager;
 
 public class DAO {
 
-	// Variáveis para configurar o banco de dados
 	private String driver = "com.mysql.cj.jdbc.Driver";
-	private String url = "jdbc:mysql://10.26.44.240:3306/dbsistema";
+	private String url = "jdbc:mysql://127.0.0.1:3306/dbsistema";
 	private String user = "root";
-	private String password = "123@senac";
-	// Criação de um objeto para uso da classe Connection(JDBC)
+	private String password = "";
 	private Connection con;
 
 	/**
@@ -18,9 +16,7 @@ public class DAO {
 	 * @return con
 	 */
 	public Connection conectar() {
-		// tratamento de exceções
 		try {
-			// as linhas abaixo abrem a conexão com o banco
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, user, password);
 			return con;

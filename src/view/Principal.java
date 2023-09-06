@@ -241,6 +241,12 @@ public class Principal extends JFrame {
 		lblNewLabel_5.setForeground(new Color(255, 255, 0));
 		lblNewLabel_5.setBounds(155, 344, 135, 19);
 		contentPane.add(lblNewLabel_5);
+		
+		JLabel lblNewLabel_7 = new JLabel("     Produtos");
+		lblNewLabel_7.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+		lblNewLabel_7.setForeground(new Color(149, 0, 0));
+		lblNewLabel_7.setBounds(300, 344, 135, 19);
+		contentPane.add(lblNewLabel_7);
 	}// fim do construtor
 
 	/**

@@ -37,9 +37,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JEditorPane;
 import java.awt.Cursor;
 
+@SuppressWarnings("unused")
 public class Clientes extends JDialog {
 	
-	//Instanciar objetos JDBC
 	DAO dao = new DAO();
 	private Connection con;
 	private PreparedStatement pst;
@@ -58,6 +58,7 @@ public class Clientes extends JDialog {
 	private JTextField txtNumero;
 	private JTextField txtComplemento;
 	private JTextField txtCidade;
+	@SuppressWarnings("rawtypes")
 	private JComboBox cboUf;
 	private JButton btnAdicionar;
 	private JButton btnEditar;
@@ -65,6 +66,7 @@ public class Clientes extends JDialog {
 	private JButton btnPesquisar;
 	private JButton btnLimpar;
 	private JScrollPane scrollPane;
+	@SuppressWarnings("rawtypes")
 	private JList listClientes;
 
 	
@@ -89,6 +91,7 @@ public class Clientes extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Clientes() {
 		getContentPane().setBackground(new Color(159, 0, 0));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Clientes.class.getResource("/img/DR Eggman.png")));
@@ -285,7 +288,6 @@ public class Clientes extends JDialog {
 		btnExcluir.setIcon(new ImageIcon(Clientes.class.getResource("/img/excluir.png")));
 		btnExcluir.setBounds(326, 420, 75, 65);
 		getContentPane().add(btnExcluir);
-
 		btnPesquisar = new JButton("");
 		btnPesquisar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnPesquisar.addActionListener(new ActionListener() {
@@ -320,39 +322,28 @@ public class Clientes extends JDialog {
 		btnLimpar.setBounds(411, 420, 75, 65);
 		getContentPane().add(btnLimpar);
 
-	}// fim do construtor
+	}
 	
 	/**
 	 * Método usado para listar o nome dos Clientes na lista
 	 */
+	@SuppressWarnings({ "unused", "unchecked" })
 	private void listarClientes() {
-		//System.out.println("teste");
-		//a linha abaixo cria um objeto usando como referência um vetor dinâmico, este objeto irá temporariamente armazenar os nomes
 		DefaultListModel<String> modelo = new DefaultListModel<>();
-		//setar o modelo (vetor na lista)
 		listClientes.setModel(modelo);
-		//Query (instrução sql)
 		String readLista = "select * from clientes where nome like '" + txtNome.getText() + "%'" + "order by nome";
 		try {
-			//abrir a conexão
 			con = dao.conectar();
-			//preparar a query (instrução sql
 			pst = con.prepareStatement(readLista);
-			//executar a query e trazer o resultado para lista
 			rs = pst.executeQuery();
-			//uso do while para trazer os usuários enquanto existir
 			while(rs.next()) {
-				//mostrar a barra de rolagem (scrollpane)
 				scrollPane.setVisible(true);
-				//adicionar os usuarios no vetor -> lista
 				modelo.addElement(rs.getString(2));
-				//esconder o scrollpane se nenhuma letra for digitada
 				if(txtNome.getText().isEmpty()) {
 					scrollPane.setVisible(false);
 				}
 				
 			}
-			//fechar a conexão
 			con.close();
 		} catch (Exception e) {
 			System.out.println(e);
@@ -363,8 +354,6 @@ public class Clientes extends JDialog {
 	 * Método para Adicionar um Cliente
 	 */
 	private void adicionar() {
-		//System.out.println("teste");
-		//validação de campos obrigatórios
 		if (txtNome.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "prencha o Nome do Cliente");
 			txtNome.requestFocus();
@@ -374,14 +363,9 @@ public class Clientes extends JDialog {
 			txtFone.requestFocus();
 		} else {
 
-			
-			//lógica principal
 			String create = "insert into clientes(nome,fone,cep,endereco,numero,complemento,bairro,cidade,uf) values (?,?,?,?,?,?,?,?,?)";
-			//tratamento de exceções
 			try {
-				//abrir a conexão
 				con = dao.conectar();
-				//preparar a execução da query(instrução sql - CRUD Create)
 				pst = con.prepareStatement(create);
 				pst.setString(1, txtNome.getText());
 				pst.setString(2, txtFone.getText());
@@ -392,15 +376,9 @@ public class Clientes extends JDialog {
 				pst.setString(7, txtBairro.getText());
 				pst.setString(8, txtCidade.getText());
 				pst.setString(9, cboUf.getSelectedItem().toString());
-				
-				//validação (liberação dos botões alterar e excluir)
-				//executa a query(instrução sql (CRUD - Create))
 				pst.executeUpdate();
-				//confirmar
 				JOptionPane.showMessageDialog(null, "Usuário adicionado");
-				//limpar os campos
 				limparCampos();
-				//fechar a conexão
 				con.close();
 			}catch (Exception e) {
 					System.out.println(e);
@@ -422,7 +400,7 @@ public class Clientes extends JDialog {
 		txtBairro.setText(null);
 		txtCidade.setText(null);
 		cboUf.setSelectedItem(null);
-	}//fim do método limparCampos()
+	}
 	
 	/**
 	 * Método usado para buscar um Cliente no banco
@@ -449,23 +427,19 @@ public class Clientes extends JDialog {
 				btnEditar.setEnabled(true);
 				btnExcluir.setEnabled(true);
 			} else {
-				//se não existir um contato no banco
 				JOptionPane.showMessageDialog(null, "Cliente inexistente");
-				//validação (liberação do Botão adicionar)
 				btnAdicionar.setEnabled(true);
 				System.out.println("Cliente inexistente");
-				
 				JOptionPane.showMessageDialog(null, "Criar novo cliente?");
 			con.close();
 			}
 			} catch (Exception e) {
             System.out.println(e);
 		}
-		}//fim do método buscar
+	}
 	
 	
 	private void editarCliente() {
-		//System.out.println("Teste do botão editar");
 		if(txtNome.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Digite o nome do cliente");
 			txtNome.requestFocus();
@@ -475,16 +449,10 @@ public class Clientes extends JDialog {
 			txtFone.requestFocus();
 			
 		} else {
-			//lógica principal
-			//CRUD - update
 			String update = "update clientes set nome=?,Fone=?,Cep=?,Endereco=?,Numero=?,Complemento=?,Bairro=?,Cidade=?,Uf=? where idcli=?";
-			//tratamento de exeções
 			try {
-				//abrir a conexão
 				con = dao.conectar();
-				//preparar a query (instrução sql)
 				pst = con.prepareStatement(update);
-				
 				pst.setString(1, txtNome.getText());
 				pst.setString(2, txtFone.getText());
 				pst.setString(3, txtCep.getText());
@@ -495,11 +463,8 @@ public class Clientes extends JDialog {
 				pst.setString(8, txtCidade.getText());
 				pst.setString(9, cboUf.getSelectedItem().toString());
 				pst.setString(10, txtID.getText());
-				//executar a query
 				pst.executeUpdate();
-				//confirmar para o usuario
 				JOptionPane.showMessageDialog(null, "Dados do cliente editado com sucesso.");
-				//limpar os campos
 				 limparCampos();
 				 con.close();				 
 			} catch (Exception e) {
@@ -507,62 +472,43 @@ public class Clientes extends JDialog {
 			}
 		}
 		
-	}// fim do método editar
+	}
 	
 	/**
 	 * Método usado para excluir um Cliente
 	 */
 	private void Excluir() {
-		//System.out.println("teste do botão excluir");
-		//validação de exclusão - a variável confirma captura a opção escolhida
 		int confirma = JOptionPane.showConfirmDialog(null, "Confirma a exclusão deste contato?","Atenção!",JOptionPane.YES_NO_OPTION);
 		if (confirma == JOptionPane.YES_OPTION) {
-			//CRUD - Delete
 			String delete = "delete from clientes where idcli=?";
-			//tratamento de exceções
 			try {
-				//abrir a conexão
 				con = dao.conectar();
-				//preparar a query (instrução sql)
 				pst = con.prepareStatement(delete);
-				//substituir a ? pelo id do usuário
 				pst.setString(1, txtID.getText());
-				//executar a query
 				pst.executeUpdate();
-				//limpar campos
 				limparCampos();
-				//exibir uma mensagem ao usuário
 				JOptionPane.showMessageDialog(null, "Clientes excluído");
-				//fechar a conexão
 				con.close();
 			} catch (Exception e) {
 				System.out.println(e);
 			}
 		}		
-	} //fim do método excluirCliente
+	}
 	
 	/**
 	 * Método que busca o Cliente selecionado na lista
 	 */
 	private void buscarClienteLista() {
 	 System.out.println("teste");
-		// variável que captura o índice da linha da lista
 		int linha = listClientes.getSelectedIndex();
 		if (linha >= 0) {
-			// Query (instrução sql)
-			// limit (0,1) -> seleciona o índice 0 e 1 usuário da lista
 			String readListaClientes = "select * from clientes where nome like '" + txtNome.getText() + "%'"	+ "order by nome limit " + (linha) + " , 1";
 			try {
-				//abrir a conexão
 				con = dao.conectar();
-				//preparar a query para execução
 				pst = con.prepareStatement(readListaClientes);
-				//executar e obter o resultado
 				rs = pst.executeQuery();
 				if (rs.next()) {
-					//esconder a lista
 					scrollPane.setVisible(false);
-					//setar os campos
 					txtID.setText(rs.getString(1));
 					txtNome.setText(rs.getString(2));
 					txtFone.setText(rs.getString(3));
@@ -576,13 +522,11 @@ public class Clientes extends JDialog {
 				} else {
 					JOptionPane.showMessageDialog(null, "Cliente inexistente");
 				}
-				//fechar a conexão
 				con.close();
 			} catch (Exception e) {
 				System.out.println(e);
 			}
 		} else {
-			// se não existir no banco um usuário da lista
 			scrollPane.setVisible(false);
 		}
 	}
@@ -631,4 +575,4 @@ public class Clientes extends JDialog {
 			System.out.println(e);
 		}
 	}	
-} // fim do código
+}

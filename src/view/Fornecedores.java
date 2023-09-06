@@ -37,9 +37,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JEditorPane;
 import java.awt.Cursor;
 
+@SuppressWarnings("unused")
 public class Fornecedores extends JDialog {
 	
-	//Instanciar objetos JDBC
 	DAO dao = new DAO();
 	private Connection con;
 	private PreparedStatement pst;
@@ -49,7 +49,6 @@ public class Fornecedores extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField txtFornecedor;
 	private JTextField txtID;
 	private JTextField txtFone;
 	private JTextField txtCep;
@@ -58,6 +57,7 @@ public class Fornecedores extends JDialog {
 	private JTextField txtNumero;
 	private JTextField txtComplemento;
 	private JTextField txtCidade;
+	@SuppressWarnings("rawtypes")
 	private JComboBox cboUf;
 	private JButton btnAdicionar;
 	private JButton btnEditar;
@@ -66,8 +66,15 @@ public class Fornecedores extends JDialog {
 	private JButton btnLimpar;
 	private JLabel lblNewLabel_10;
 	private JTextField txtEmail;
-
-	
+	private JTextField txtRazao;
+	private JTextField txtFantasia;
+	private JTextField txtVendedor;
+	private JLabel lblNewLabel_15;
+	private JTextField txtSite;
+	private JTextField txtCnpj;
+	private JLabel lblNewLabel_12;
+	private JLabel lblNewLabel_16;
+	private JTextField txtIE;
 	
 	/**
 	 * Launch the application.
@@ -90,68 +97,51 @@ public class Fornecedores extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Fornecedores() {
 		getContentPane().setBackground(new Color(159, 0, 0));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Clientes.class.getResource("/img/DR Eggman.png")));
 		setTitle("E.G.G Customers");
-		setBounds(100, 100, 555, 600);
+		setBounds(100, 100, 730, 600);
 		getContentPane().setLayout(null);
-
-		JLabel lblNewLabel = new JLabel("Fornecedor:");
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel.setBounds(26, 78, 86, 14);
-		getContentPane().add(lblNewLabel);
-
-		txtFornecedor = new JTextField();
-		txtFornecedor.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-		});
-		txtFornecedor.setForeground(new Color(0, 0, 0));
-		txtFornecedor.setBackground(new Color(255, 255, 0));
-		txtFornecedor.setBounds(26, 102, 331, 20);
-		getContentPane().add(txtFornecedor);
-		txtFornecedor.setColumns(10);
 
 		JLabel lblNewLabel_1 = new JLabel("Fone:");
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_1.setBounds(26, 189, 46, 14);
+		lblNewLabel_1.setBounds(21, 189, 46, 14);
 		getContentPane().add(lblNewLabel_1);
 
 		JLabel lblNewLabel_2 = new JLabel("ID:");
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
 		lblNewLabel_2.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_2.setBounds(26, 22, 46, 14);
+		lblNewLabel_2.setBounds(21, 22, 46, 14);
 		getContentPane().add(lblNewLabel_2);
 
 		txtID = new JTextField();
 		txtID.setForeground(new Color(255, 255, 255));
 		txtID.setBackground(new Color(0, 0, 0));
-		txtID.setBounds(26, 47, 86, 20);
+		txtID.setBounds(21, 47, 86, 20);
 		getContentPane().add(txtID);
 		txtID.setColumns(10);
 
 		txtFone = new JTextField();
 		txtFone.setBackground(new Color(255, 255, 0));
 		txtFone.setForeground(new Color(0, 0, 0));
-		txtFone.setBounds(26, 214, 192, 20);
+		txtFone.setBounds(21, 214, 230, 20);
 		getContentPane().add(txtFone);
 		txtFone.setColumns(10);
 
 		txtCep = new JTextField();
 		txtCep.setForeground(new Color(255, 255, 255));
 		txtCep.setBackground(new Color(0, 0, 0));
-		txtCep.setBounds(26, 270, 115, 20);
+		txtCep.setBounds(21, 270, 115, 20);
 		getContentPane().add(txtCep);
 		txtCep.setColumns(10);
 
 		JLabel lblNewLabel_3 = new JLabel("CEP:");
 		lblNewLabel_3.setForeground(new Color(255, 255, 255));
 		lblNewLabel_3.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_3.setBounds(26, 245, 33, 14);
+		lblNewLabel_3.setBounds(21, 245, 33, 14);
 		getContentPane().add(lblNewLabel_3);
 
 		JButton btnBuscarCep = new JButton("");
@@ -164,18 +154,18 @@ public class Fornecedores extends JDialog {
 				buscarCep();
 			}
 		});
-		btnBuscarCep.setBounds(451, 485, 75, 65);
+		btnBuscarCep.setBounds(615, 485, 75, 65);
 		getContentPane().add(btnBuscarCep);
 
 		JLabel lblNewLabel_4 = new JLabel("Endereço:");
 		lblNewLabel_4.setForeground(new Color(255, 255, 255));
 		lblNewLabel_4.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_4.setBounds(26, 301, 59, 14);
+		lblNewLabel_4.setBounds(21, 301, 59, 14);
 		getContentPane().add(lblNewLabel_4);
 
 		txtEndereco = new JTextField();
 		txtEndereco.setBackground(new Color(255, 255, 0));
-		txtEndereco.setBounds(26, 326, 325, 20);
+		txtEndereco.setBounds(21, 326, 325, 20);
 		getContentPane().add(txtEndereco);
 		txtEndereco.setColumns(10);
 
@@ -195,26 +185,26 @@ public class Fornecedores extends JDialog {
 		JLabel lblNewLabel_6 = new JLabel("Número:");
 		lblNewLabel_6.setForeground(new Color(255, 255, 255));
 		lblNewLabel_6.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_6.setBounds(246, 245, 46, 14);
+		lblNewLabel_6.setBounds(151, 245, 46, 14);
 		getContentPane().add(lblNewLabel_6);
 
 		txtNumero = new JTextField();
-		txtNumero.setForeground(new Color(255, 255, 255));
-		txtNumero.setBackground(new Color(0, 0, 0));
-		txtNumero.setBounds(246, 270, 105, 20);
+		txtNumero.setForeground(new Color(0, 0, 0));
+		txtNumero.setBackground(new Color(255, 255, 0));
+		txtNumero.setBounds(151, 270, 105, 20);
 		getContentPane().add(txtNumero);
 		txtNumero.setColumns(10);
 
 		JLabel lblNewLabel_7 = new JLabel("Complemento:");
 		lblNewLabel_7.setForeground(new Color(255, 255, 255));
 		lblNewLabel_7.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_7.setBounds(26, 357, 81, 14);
+		lblNewLabel_7.setBounds(21, 357, 81, 14);
 		getContentPane().add(lblNewLabel_7);
 
 		txtComplemento = new JTextField();
 		txtComplemento.setForeground(new Color(255, 255, 255));
 		txtComplemento.setBackground(new Color(0, 0, 0));
-		txtComplemento.setBounds(26, 382, 151, 20);
+		txtComplemento.setBounds(21, 382, 151, 20);
 		getContentPane().add(txtComplemento);
 		txtComplemento.setColumns(10);
 
@@ -226,14 +216,14 @@ public class Fornecedores extends JDialog {
 
 		txtCidade = new JTextField();
 		txtCidade.setBackground(new Color(255, 255, 0));
-		txtCidade.setBounds(26, 438, 338, 20);
+		txtCidade.setBounds(21, 438, 338, 20);
 		getContentPane().add(txtCidade);
 		txtCidade.setColumns(10);
 
 		JLabel lblNewLabel_9 = new JLabel("UF:");
 		lblNewLabel_9.setForeground(new Color(255, 255, 255));
 		lblNewLabel_9.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_9.setBounds(408, 413, 33, 14);
+		lblNewLabel_9.setBounds(374, 413, 33, 14);
 		getContentPane().add(lblNewLabel_9);
 
 		btnAdicionar = new JButton("");
@@ -245,7 +235,7 @@ public class Fornecedores extends JDialog {
 			}
 		});
 		btnAdicionar.setIcon(new ImageIcon(Clientes.class.getResource("/img/adicionar.png")));
-		btnAdicionar.setBounds(111, 485, 75, 65);
+		btnAdicionar.setBounds(145, 485, 75, 65);
 		getContentPane().add(btnAdicionar);
 
 		btnEditar = new JButton("");
@@ -257,7 +247,7 @@ public class Fornecedores extends JDialog {
 			}
 		});
 		btnEditar.setIcon(new ImageIcon(Clientes.class.getResource("/img/editar.png")));
-		btnEditar.setBounds(196, 485, 75, 65);
+		btnEditar.setBounds(265, 485, 75, 65);
 		getContentPane().add(btnEditar);
 
 		btnExcluir = new JButton("");
@@ -269,7 +259,7 @@ public class Fornecedores extends JDialog {
 			}
 		});
 		btnExcluir.setIcon(new ImageIcon(Clientes.class.getResource("/img/excluir.png")));
-		btnExcluir.setBounds(281, 485, 75, 65);
+		btnExcluir.setBounds(385, 485, 75, 65);
 		getContentPane().add(btnExcluir);
 
 		btnPesquisar = new JButton("");
@@ -291,7 +281,7 @@ public class Fornecedores extends JDialog {
 		cboUf.setForeground(new Color(255, 255, 255));
 		cboUf.setModel(new DefaultComboBoxModel(
 				new String[] { "--", "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA","PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" }));
-		cboUf.setBounds(408, 437, 53, 22);
+		cboUf.setBounds(374, 437, 53, 22);
 		getContentPane().add(cboUf);
 		
 		btnLimpar = new JButton("");
@@ -303,32 +293,109 @@ public class Fornecedores extends JDialog {
 			}
 		});
 		btnLimpar.setIcon(new ImageIcon(Clientes.class.getResource("/img/eraser.png")));
-		btnLimpar.setBounds(366, 485, 75, 65);
+		btnLimpar.setBounds(495, 485, 75, 65);
 		getContentPane().add(btnLimpar);
 		
 		lblNewLabel_10 = new JLabel("E-mail:");
 		lblNewLabel_10.setForeground(new Color(255, 255, 255));
 		lblNewLabel_10.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_10.setBounds(26, 133, 46, 14);
+		lblNewLabel_10.setBounds(21, 133, 46, 14);
 		getContentPane().add(lblNewLabel_10);
 		
 		txtEmail = new JTextField();
 		txtEmail.setBackground(new Color(0, 0, 0));
 		txtEmail.setForeground(new Color(255, 255, 255));
-		txtEmail.setBounds(26, 158, 208, 20);
+		txtEmail.setBounds(21, 158, 230, 20);
 		getContentPane().add(txtEmail);
 		txtEmail.setColumns(10);
+		
+		JLabel lblNewLabel_11 = new JLabel("Razão Social:");
+		lblNewLabel_11.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
+		lblNewLabel_11.setForeground(new Color(255, 255, 255));
+		lblNewLabel_11.setBackground(new Color(255, 255, 255));
+		lblNewLabel_11.setBounds(122, 22, 86, 14);
+		getContentPane().add(lblNewLabel_11);
+		
+		txtRazao = new JTextField();
+		txtRazao.setForeground(new Color(0, 0, 0));
+		txtRazao.setBackground(new Color(255, 255, 0));
+		txtRazao.setBounds(122, 47, 236, 20);
+		getContentPane().add(txtRazao);
+		txtRazao.setColumns(10);
+		
+		txtFantasia = new JTextField();
+		txtFantasia.setForeground(new Color(255, 255, 255));
+		txtFantasia.setBackground(new Color(0, 0, 0));
+		txtFantasia.setBounds(21, 102, 145, 20);
+		getContentPane().add(txtFantasia);
+		txtFantasia.setColumns(10);
+		
+		JLabel lblNewLabel_13 = new JLabel("Nome Fantasia:");
+		lblNewLabel_13.setForeground(new Color(255, 255, 255));
+		lblNewLabel_13.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
+		lblNewLabel_13.setBounds(21, 77, 95, 14);
+		getContentPane().add(lblNewLabel_13);
+		
+		txtVendedor = new JTextField();
+		txtVendedor.setBackground(new Color(0, 0, 0));
+		txtVendedor.setForeground(new Color(255, 255, 255));
+		txtVendedor.setBounds(176, 102, 331, 20);
+		getContentPane().add(txtVendedor);
+		txtVendedor.setColumns(10);
+		
+		JLabel lblNewLabel_14 = new JLabel("Vendedor:");
+		lblNewLabel_14.setForeground(new Color(255, 255, 255));
+		lblNewLabel_14.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
+		lblNewLabel_14.setBounds(176, 77, 75, 14);
+		getContentPane().add(lblNewLabel_14);
+		
+		lblNewLabel_15 = new JLabel("Site:");
+		lblNewLabel_15.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
+		lblNewLabel_15.setForeground(new Color(255, 255, 255));
+		lblNewLabel_15.setBounds(266, 133, 46, 14);
+		getContentPane().add(lblNewLabel_15);
+		
+		txtSite = new JTextField();
+		txtSite.setBackground(new Color(255, 255, 0));
+		txtSite.setBounds(266, 158, 432, 20);
+		getContentPane().add(txtSite);
+		txtSite.setColumns(10);
+		
+		txtCnpj = new JTextField();
+		txtCnpj.setForeground(new Color(255, 255, 255));
+		txtCnpj.setBackground(new Color(0, 0, 0));
+		txtCnpj.setBounds(266, 214, 195, 20);
+		getContentPane().add(txtCnpj);
+		txtCnpj.setColumns(10);
+		
+		lblNewLabel_12 = new JLabel("Cpnj:");
+		lblNewLabel_12.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
+		lblNewLabel_12.setForeground(new Color(255, 255, 255));
+		lblNewLabel_12.setBounds(266, 190, 46, 14);
+		getContentPane().add(lblNewLabel_12);
+		
+		lblNewLabel_16 = new JLabel("IE:");
+		lblNewLabel_16.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
+		lblNewLabel_16.setForeground(new Color(255, 255, 255));
+		lblNewLabel_16.setBounds(471, 189, 75, 14);
+		getContentPane().add(lblNewLabel_16);
+		
+		txtIE = new JTextField();
+		txtIE.setBackground(new Color(255, 255, 0));
+		txtIE.setBounds(471, 214, 227, 20);
+		getContentPane().add(txtIE);
+		txtIE.setColumns(10);
 
-	}// fim do construtor
+	}
 	
 	
 	/**
 	 * Método para Adicionar um Fornecedor
 	 */
 	private void adicionar() {
-		if (txtFornecedor.getText().isEmpty()) {
+		if (txtRazao.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "prencha o Nome do Fornecedor");
-			txtFornecedor.requestFocus();
+			txtRazao.requestFocus();
 		}else
 			if (txtFone.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "prencha o Fone do Fornecedor");
@@ -336,20 +403,25 @@ public class Fornecedores extends JDialog {
 		} else {
 
 			
-			String create = "insert into Fornecedores(fornecedor,email,fone,cep,endereco,numero,complemento,bairro,cidade,uf) values (?,?,?,?,?,?,?,?,?,?)";
+			String create = "insert into fornecedores(razao,fantasia,vendedor,email,site,cnpj,ie,fone,cep,endereco,numero,complemento,bairro,cidade,uf) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			try {
 				con = dao.conectar();
 				pst = con.prepareStatement(create);
-				pst.setString(1, txtFornecedor.getText());
-				pst.setString(2, txtEmail.getText());
-				pst.setString(3, txtFone.getText());
-				pst.setString(4, txtCep.getText());
-				pst.setString(5, txtEndereco.getText());
-				pst.setString(6, txtNumero.getText());
-				pst.setString(7, txtComplemento.getText());
-				pst.setString(8, txtBairro.getText());
-				pst.setString(9, txtCidade.getText());
-				pst.setString(10, cboUf.getSelectedItem().toString());
+				pst.setString(1, txtRazao.getText());
+				pst.setString(2, txtFantasia.getText());
+				pst.setString(3, txtVendedor.getText());
+				pst.setString(4, txtEmail.getText());
+				pst.setString(5, txtSite.getText());
+				pst.setString(6, txtCnpj.getText());
+				pst.setString(7, txtIE.getText());
+				pst.setString(8, txtFone.getText());
+				pst.setString(9, txtCep.getText());
+				pst.setString(10, txtEndereco.getText());
+				pst.setString(11, txtNumero.getText());
+				pst.setString(12, txtComplemento.getText());
+				pst.setString(13, txtBairro.getText());
+				pst.setString(14, txtCidade.getText());
+				pst.setString(15, cboUf.getSelectedItem().toString());
 				
 				pst.executeUpdate();
 				JOptionPane.showMessageDialog(null, "fornecedor adicionado");
@@ -366,8 +438,13 @@ public class Fornecedores extends JDialog {
 	 */
 	private void limparCampos() {
 		txtID.setText(null);
-		txtFornecedor.setText(null);
+		txtRazao.setText(null);
+		txtFantasia.setText(null);
+		txtVendedor.setText(null);
 		txtEmail.setText(null);
+		txtSite.setText(null);
+		txtCnpj.setText(null);
+		txtIE.setText(null);
 		txtFone.setText(null);
 		txtCep.setText(null);
 		txtEndereco.setText(null);
@@ -377,31 +454,36 @@ public class Fornecedores extends JDialog {
 		txtCidade.setText(null);
 		cboUf.setSelectedItem(null);
 		
-	}//fim do método limparCampos()
+	}
 	
 	/**
 	 * Método usado para buscar um Fornecedor no banco
 	 */
 	private void Usuario() {
 		System.out.println("teste do botão buscar");
-		String read = "select * from Fornecedores where Fornecedor = ?";
+		String read = "select * from fornecedores where fantasia = ?";
 		try {
 			con = dao.conectar();
 			pst = con.prepareStatement(read);
-			pst.setString(1, txtFornecedor.getText());
+			pst.setString(1, txtFantasia.getText());
 			rs = pst.executeQuery();
 			if (rs.next()) {
 				txtID.setText(rs.getString(1));
-				txtFornecedor.setText(rs.getString(2));
-				txtEmail.setText(rs.getString(3));
-				txtFone.setText(rs.getString(4));
-				txtCep.setText(rs.getString(5));
-				txtEndereco.setText(rs.getString(6));
-				txtNumero.setText(rs.getString(7));
-				txtComplemento.setText(rs.getString(8));
-				txtBairro.setText(rs.getString(9));
-				txtCidade.setText(rs.getString(10));
-				cboUf.setSelectedItem(rs.getString(11));
+				txtRazao.setText(rs.getString(2));	
+				txtFantasia.setText(rs.getString(3));
+				txtVendedor.setText(rs.getString(4));		
+				txtEmail.setText(rs.getString(5));
+				txtSite.setText(rs.getString(6));
+				txtCnpj.setText(rs.getString(7));
+				txtIE.setText(rs.getString(8));
+				txtFone.setText(rs.getString(9));
+				txtCep.setText(rs.getString(10));
+				txtEndereco.setText(rs.getString(11));
+				txtNumero.setText(rs.getString(12));
+				txtComplemento.setText(rs.getString(13));
+				txtBairro.setText(rs.getString(14));
+				txtCidade.setText(rs.getString(15));
+				cboUf.setSelectedItem(rs.getString(16));
 				btnEditar.setEnabled(true);
 				btnExcluir.setEnabled(true);
 			} else {
@@ -415,13 +497,13 @@ public class Fornecedores extends JDialog {
 			} catch (Exception e) {
             System.out.println(e);
 		}
-		}//fim do método buscar
+		}
 	
 	
 	private void editarCliente() {
-		if(txtFornecedor.getText().isEmpty()) {
+		if(txtFantasia.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Digite o nome do Fornecedor");
-			txtFornecedor.requestFocus();
+			txtFantasia.requestFocus();
 			
 		} else if (txtFone.getText().isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Digite o Fone do Fornecedor");
@@ -432,17 +514,22 @@ public class Fornecedores extends JDialog {
 			try {
 				con = dao.conectar();
 				pst = con.prepareStatement(update);
-				pst.setString(1, txtFornecedor.getText());
-				pst.setString(2, txtEmail.getText());
-				pst.setString(3, txtFone.getText());
-				pst.setString(4, txtCep.getText());
-				pst.setString(5, txtEndereco.getText());
-				pst.setString(6, txtNumero.getText());
-				pst.setString(7, txtComplemento.getText());
-				pst.setString(8, txtBairro.getText());
-				pst.setString(9, txtCidade.getText());
-				pst.setString(10, cboUf.getSelectedItem().toString());
-				pst.setString(11, txtID.getText());
+				pst.setString(1, txtRazao.getText());
+				pst.setString(2, txtFantasia.getText());
+				pst.setString(3, txtVendedor.getText());
+				pst.setString(4, txtEmail.getText());
+				pst.setString(5, txtSite.getText());
+				pst.setString(6, txtCnpj.getText());
+				pst.setString(7, txtIE.getText());
+				pst.setString(8, txtFone.getText());
+				pst.setString(9, txtCep.getText());
+				pst.setString(10, txtEndereco.getText());
+				pst.setString(11, txtNumero.getText());
+				pst.setString(12, txtComplemento.getText());
+				pst.setString(13, txtBairro.getText());
+				pst.setString(14, txtCidade.getText());
+				pst.setString(15, cboUf.getSelectedItem().toString());
+				pst.setString(16, txtID.getText());
 				pst.executeUpdate();
 				JOptionPane.showMessageDialog(null, "Dados do Fornecedor editado com sucesso.");
 				 limparCampos();
@@ -452,7 +539,7 @@ public class Fornecedores extends JDialog {
 			}
 		}
 		
-	}// fim do método editar
+	}
 	
 	/**
 	 * Método usado para excluir um Fornecedor
@@ -460,7 +547,7 @@ public class Fornecedores extends JDialog {
 	private void Excluir() {
 		int confirma = JOptionPane.showConfirmDialog(null, "Confirma a exclusão deste contato?","Atenção!",JOptionPane.YES_NO_OPTION);
 		if (confirma == JOptionPane.YES_OPTION) {
-			String delete = "delete from fornecedor where idcli=?";
+			String delete = "delete from fornecedores where id=?";
 			try {
 				con = dao.conectar();
 				pst = con.prepareStatement(delete);
@@ -473,7 +560,7 @@ public class Fornecedores extends JDialog {
 				System.out.println(e);
 			}
 		}		
-	} //fim do método excluirFornecedor
+	}
 	
 	/**
 	 * buscarCep
@@ -519,6 +606,7 @@ public class Fornecedores extends JDialog {
 			System.out.println(e);
 		}
 		
+		
+		
 	}
-	
-}// fim do código
+}

@@ -6,9 +6,15 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.Font;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.net.URI;
+import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class Sobre extends JDialog {
 
 	/**
@@ -45,22 +51,43 @@ public class Sobre extends JDialog {
 		getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Autor: Kaio Oda Queiroz ");
-		lblNewLabel_1.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
+		lblNewLabel_1.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_1.setBounds(30, 91, 164, 14);
+		lblNewLabel_1.setBounds(30, 97, 265, 40);
 		getContentPane().add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("Sob a licença MIT");
-		lblNewLabel_2.setFont(new Font("Comic Sans MS", Font.BOLD, 11));
-		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setBounds(30, 143, 164, 14);
-		getContentPane().add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.setBackground(new Color(170, 0, 0));
 		lblNewLabel_3.setIcon(new ImageIcon(Sobre.class.getResource("/img/mit-icon.png")));
-		lblNewLabel_3.setBounds(296, 124, 128, 126);
+		lblNewLabel_3.setBounds(303, 138, 121, 112);
 		getContentPane().add(lblNewLabel_3);
-
+		
+		JButton btngithub = new JButton("");
+		btngithub.setBackground(new Color(170, 0, 0));
+		btngithub.setIcon(new ImageIcon(Sobre.class.getResource("/img/icons8-github-48.png")));
+		btngithub.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				link("https://github.com/Kaio200");
+			}
+		});
+		btngithub.setBounds(10, 175, 89, 75);
+		getContentPane().add(btngithub);
+		
 	}
+
+	/**
+	 * link
+	 * 
+	 * @param site
+	 */
+	private void link(String site) {
+		Desktop desktop = Desktop.getDesktop();
+		try {
+			URI uri = new URI(site);
+			desktop.browse(uri);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
 }
